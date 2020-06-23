@@ -33,22 +33,21 @@ volatile uint8   gADC_channel		= 2;
 volatile uint32  gnWrites			= 0;
 
 uint8 gTWIRegisters[] = {
-	twiEND,
-	0x00,	         //twiMasterBusy							0
-	0x10,            //twiFWVersion							    1
-	twiStatusReady,  // twiStatus                               3
-	0x00,	         //twiExternalBatteryReadingHighByte		4	
-	0x00,	         //twiExternalBatteryReadingLowByte		    5	
-	0x00,	         //twiInternalBatteryReadingHighByte		6
-	0x00,            //twiInternalBatteryReadingLowByte		    7
-	0x00,	         //twiBatteryTempHighByte				    8
-	0x00,	         //twiBatteryTempLowByte					9
-	0x00,            //twiExternalBatteryPresent			   10
-
-    // Download control
-    0x00,            // twiDownload                            11
-    0x00,            // twiPacketDownload                      12
-    0x00             // twiFailureTest                         13 
+	twiEND,          // num reg                           0
+	0x00,	         //twiMasterBusy                      1
+	0x10,            //twiFWVersion                       2
+	twiStatusReady,  // twiStatus                         3
+	0x00,	         //twiExternalBatteryReadingHighByte  4	
+	0x00,	         //twiExternalBatteryReadingLowByte   5	
+	0x00,	         //twiInternalBatteryReadingHighByte  6
+	0x00,            //twiInternalBatteryReadingLowByte   7
+	0x00,	         //twiBatteryTempHighByte             8
+	0x00,	         //twiBatteryTempLowByte              9
+	0x00,            //twiExternalBatteryPresent          10
+        // Download control
+        0x00,            // twiDownload                       11
+        0x00,            // twiPacketDownload                 12
+        0x00             // twiFailureTest                    13 
 };
 
 #if 0
