@@ -9,6 +9,9 @@
  *  Original project was branched from 200-0588 ROCAM4 Metabo
  *
  *  1.0 - Initial release
+ *  1.1 - Added clearing of TIMER1 overflow flag within ADC complete ISR.  As the ISR is triggered by the TIMER1 overflow
+ *        and the interrupt routine for the TIMER1 overflow has been removed it is essential that the overflow flag be cleared
+ *        allow for new analog to digital conversions to be triggered.
  *
  */
 
@@ -50,20 +53,6 @@ uint8 gTWIRegisters[] = {
         0x00             // twiFailureTest                    13 
 };
 
-#if 0
-ISR( TIM1_OVF_vect )
-{
-	gTimer0OverflowCnt++;
-	gTXReady = true;
-
-	// set the read flag for reading the Equalizer LOCK and battery temperature every 1 second
-	if( (gTimer0OverflowCnt % 2) == 0)
-	{
-		gReadEqualizerLock = true;
-	}
-}
-#endif
-
 ISR ( ADC_vect )
 {
 	switch (gADC_channel)
@@ -90,6 +79,8 @@ ISR ( ADC_vect )
 
 	gADC_channel++;
 	if(gADC_channel > 2) gADC_channel = 0;
+
+	TIFR1 |= (1 >> TOV1);							// clear timer1 overflow flag
 	ADMUX   = (ADMUX & 0xC0) | gADC_channel;		// select the next ADC channel to read
 
 }
@@ -120,7 +111,6 @@ int application(void)
 	TCCR1A  = 0x00;
 	TCCR1B  = 0x03;														// set the time1 clock source to prescaler of 64.  At 8Mhz yields an overflow every 0.524 seconds;
 	TCNT1   = 0x0000;													// Initialize the timer to zero
-	//TIMSK1 |= (1 << TOIE1);												// turn on the timer0 overflow interrupt
 
 	// Initialize the I2C interfaces
 	usiTwiSlaveInit();
